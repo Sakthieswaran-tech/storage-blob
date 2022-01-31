@@ -33,9 +33,7 @@ def download_file(id:int,token:str,db:Session=Depends(get_db)):
         return "No token"
     decoded=jwt.decode(token,SECRET_KEY,ALGORITHM)
     owner:int=decoded.get("id")
-    print("owner ",owner)
     get_file=db.query(Files).filter(Files.id==id).first()
-    print("file id ",get_file.id,"   owner id ",get_file.owner)
     if get_file.owner!=owner and owner not in my_list:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -50,7 +48,10 @@ def delete_file(id:int,token:str,db:Session=Depends(get_db)):
     if get_file_id is None:
         return "File not found"
     if get_file_id.owner!=owner:
-        return "Not allowed"
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not allowed to access this file"
+        )
     if os.path.exists(get_file_id.path):    
         os.remove(get_file_id.path)
         db.query(Files).filter(Files.id==id).delete(synchronize_session=False)
