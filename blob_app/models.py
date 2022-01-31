@@ -15,7 +15,7 @@ class Files(Base):
     id=Column(Integer,primary_key=True,index=True)
     file_name=Column(String)
     path=Column(String)
-    owner=Column(Integer,ForeignKey("users.id",ondelete=CASCADE))
+    owner=Column(Integer,ForeignKey("users.id"))
     size=Column(Integer)
     file_type=Column(String)
     creator=relationship("User",back_populates="files")
