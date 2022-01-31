@@ -1,4 +1,3 @@
-from tkinter import CASCADE
 from sqlalchemy import Column, ForeignKey,String,Integer
 from .database import Base
 from sqlalchemy.orm import relationship
